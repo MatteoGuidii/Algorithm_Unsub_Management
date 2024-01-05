@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unsubscription Results</title>
+</head>
+<body>
+    <h1>Unsubscription Results</h1>
+    <ul>
+        {% for sender, status in results.items() %}
+            <li>{{ sender }}: {{ status }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Back to Senders List</a>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unsubscribe History</title>
+</head>
+<body>
+    <h1>Unsubscription History</h1>
+    <ul>
+        {% for sender, status in attempts.items() %}
+            <li>{{ sender }}: {{ status }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Back to Senders List</a>
+</body>
+</html>

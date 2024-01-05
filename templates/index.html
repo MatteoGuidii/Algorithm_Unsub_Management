@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Subscriptions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 1em;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        label {
+            margin-left: 0.5em;
+        }
+        button {
+            padding: 0.5em 1em;
+            margin-top: 1em;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .history-link {
+            display: block;
+            margin-top: 1em;
+            font-size: 1em;
+        }
+    </style>
+    <script>
+        function confirmUnsubscribe() {
+            return confirm('Are you sure you want to unsubscribe from the selected emails?');
+        }
+    </script>
+</head>
+<body>
+    <h1>Email Subscriptions</h1>
+    <form method="POST" action="/" onsubmit="return confirmUnsubscribe();">
+        <ul>
+            {% for name in subscriptions %}
+            <li>
+                <input type="checkbox" name="senders" id="sender_{{ loop.index }}" value="{{ name }}">
+                <label for="sender_{{ loop.index }}">{{ name }}</label>
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Unsubscribe Selected</button>
+    </form>
+    <a href="/unsubscribe-history" class="history-link">View Unsubscribe History</a>
+</body>
+</html>
