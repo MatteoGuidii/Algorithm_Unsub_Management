@@ -11,10 +11,20 @@ Before you begin, ensure you have the following installed:
 
 ## Setup Instructions
 
-### 1. Download Edge WebDriver
+### 1. Clone the Repository
+- Clone the repository to your local machine using the following command:
+```bash
+git clone https://github.com/MatteoGuidii/email-subscriptions-managment.git
+```
+Navigate to the cloned repository's directory:
+```bash
+cd email-subscriptions-managment
+```
+
+### 2. Download Edge WebDriver
 - Download the Edge WebDriver from the [Microsoft Edge Developer website](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/) and place the executable in the same directory as the project.
 
-### 2. Google Cloud Console Configuration
+### 3. Google Cloud Console Configuration
 - Navigate to the [Google Cloud Console](https://console.cloud.google.com/).
 - Create a new project or select an existing one.
 - Enable the Gmail API for your project.
@@ -22,10 +32,10 @@ Before you begin, ensure you have the following installed:
 - Add `http://localhost:8080/` to the Authorized redirect URIs.
 - Download the client configuration JSON file and place it in the project folder.
 
-### 3. Client Secret File
+### 4. Client Secret File
 - Replace the `client_secret_30643909904-mjs4cc25qjpod0cm954hvhabsd7pfsv9.apps.googleusercontent.com.json` in `quickstart.py` with the path to your downloaded client secret file.
 
-### 4. Install Python Dependencies
+### 5. Install Python Dependencies
 - Install the required Python libraries using:
   ```bash
   pip install google-auth
