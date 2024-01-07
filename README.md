@@ -53,7 +53,7 @@ To run the script, execute the following command in your terminal:
 Follow the on-screen instructions to authenticate your Gmail account.
 
 ### Important Notes
-- Development Status: Please note that this script is still a work in progress and may contain errors. We are actively working to improve its functionality and reliability. Your feedback and contributions are welcome!
+- Development Status: Please note that this script is still a work in progress and may contain errors. I am actively working to improve its functionality and reliability. Your feedback and contributions are welcome!
 - Client Secret File Security: Keep your client secret file secure and do not share it publicly. This file contains sensitive information essential for accessing your Gmail account through the script.
 - Access Permissions: Ensure that you have read and write access to the Gmail account you're using with the script. This permission is necessary for the script to function correctly.
 - Intended Use: This script is meant for personal use and should not be used for spamming or any unauthorized access. Respect privacy and adhere to applicable laws and Gmail's terms of service.
