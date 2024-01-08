@@ -2,3 +2,5 @@ client_secret_30643909904-mjs4cc25qjpod0cm954hvhabsd7pfsv9.apps.googleuserconten
 token.json
 cache/
 __pycache__/
+subscriptions.json
+unsubscribe_attempts.json

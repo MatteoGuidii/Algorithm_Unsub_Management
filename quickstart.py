@@ -66,8 +66,13 @@ def list_messages(service, user_id, max_results=100, past_days=90):
     try:
         messages = []
         after_date = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=past_days)).strftime('%Y/%m/%d')
+        
+        # Excluding emails from specific senders irrespective of their domain
+        excluded_senders = ["Amazon", "LinkedIn", "Apple"]
+        exclude_query = ' '.join([f'-from:*{sender}*' for sender in excluded_senders])
+
         # Query to search for specific terms in both Promotions and Primary categories
-        query = f'after:{after_date} ((category:promotions) OR (category:primary "newsletter" OR "Newsletter" OR "subscription"))'
+        query = f'after:{after_date} ((category:promotions) OR (category:primary "newsletter" OR "Newsletter" OR "subscription")) {exclude_query}'
 
         response = service.users().messages().list(userId=user_id, q=query).execute()
         messages.extend(response.get('messages', []))
@@ -140,7 +145,7 @@ def find_unsubscribe_link(service, message_id):
 
         # Using regex to find links with case-insensitive unsubscribe keywords
         unsubscribe_keywords = ['unsubscribe', 'click here', 'here', 'opt-out', 'opt out']
-        secondary_keywords = ['click here', 'here']
+        secondary_keywords = ['click here', 'here', 'this']
         unsubscribe_links = []
 
         for a in soup.find_all('a', href=True):
@@ -182,8 +187,15 @@ def selenium_unsubscribe(link):
     driver = webdriver.Edge(options=options)
     try:
         driver.get(link)
-        # Wait for any button or input of type button to be present
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//button | //input[@type='button']")))
+
+        # Check the body of the page for success keywords
+        body_text = driver.find_element(By.TAG_NAME, "body").text.lower()
+        success_keywords = ['success', 'unsubscribed', 'unsubscribe', 'successfull']
+        if any(keyword in body_text for keyword in success_keywords):
+            return "Unsubscribed"
+        
+        # Wait for any button or input of type button or submit to be present
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//button[@type='submit'] | //input[@type='button' or @type='submit'] | //a[contains(@class, 'spectrum-Button')]")))
         
         # Check for a "Resubscribe" button with case-insensitive match
         xpath_for_resubscribe = "//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'resubscribe')]"
@@ -191,15 +203,15 @@ def selenium_unsubscribe(link):
         if resubscribe_elements:
             return "Unsubscribed successfully - resubscribe option found"
 
-        # Find both input of type button and button elements
-        buttons = driver.find_elements(By.XPATH, "//button | //input[@type='button']")
+        # Find both input of type button or submit and button elements
+        buttons = driver.find_elements(By.XPATH, "//button[@type='submit'] | //input[@type='button' or @type='submit'] | //a[contains(@class, 'spectrum-Button')] | //button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'unsubscribe')]")
 
         # Additional keywords to look for in buttons
-        additional_keywords = ['confirm', 'yes', 'agree', 'ok']
+        additional_keywords = ['confirm', 'yes', 'agree', 'ok', 'submit']
 
         for button in buttons:
-            # Check the text for <button> and value for <input>
-            button_text = button.text.lower() if button.tag_name == "button" else button.get_attribute('value').lower()
+            # Check the text for <button>, value for <input>, and text for <a>
+            button_text = button.text.lower() if button.tag_name in ["button", "a"] else button.get_attribute('value').lower()
             if 'unsubscribe' in button_text or any(keyword in button_text for keyword in additional_keywords):
                 button.click()
                 return "Unsubscribed"
