@@ -53,8 +53,8 @@ To run the script, execute the following command in your terminal:
 Follow the on-screen instructions to authenticate your Gmail account.
 
 ### Important Notes
-- **Compatibility:** This script currently operates effectively with the Edge browser. Please note that this is an initial approach and the script may have limitations or encounter issues in its current form.
-- **Development Status:** The script is a work in progress. Expect continuous updates and improvements as development progresses.
+- **Compatibility:** This script currently operates effectively with the **Edge** browser. Please note that this is an initial approach and the script may have limitations or encounter issues in its current form.
+- **Development Status:** The script is a **work in progress**. Expect continuous updates and improvements as development progresses.
 - **Security:** It is crucial to keep your client secret file secure and confidential. Do not share this file publicly, as it contains sensitive information essential for accessing your Gmail account through the script.
 - **Permissions:** Ensure that you have read and write access to the Gmail account you're using with the script. In the Google Cloud Console, under the "Test Users" section, include the email address that you will use with the script. This step is necessary for the script to function correctly and access your emails.
 - **Usage:** This script is intended for personal use. Users should respect privacy, adhere to applicable laws, and follow Gmail's terms of service when using this script.
