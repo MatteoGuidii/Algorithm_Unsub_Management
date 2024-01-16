@@ -133,11 +133,15 @@ def find_unsubscribe_link(service, message_id):
         # Fetch the email body
         message = service.users().messages().get(userId='me', id=message_id, format='full').execute()
         parts = message.get('payload').get('parts')
-        body_data = None
-        for part in parts:
-            if part['mimeType'] == 'text/html':
-                body_data = part['body']['data']
-                break
+        if parts is None:
+            # Handling non-multipart emails
+            body_data = message.get('payload').get('body').get('data')
+        else:
+            for part in parts:
+                if part['mimeType'] == 'text/html':
+                    body_data = part['body']['data']
+                    break
+                
         if not body_data:
             return None
         decoded_data = base64.urlsafe_b64decode(body_data).decode('utf-8')
@@ -204,7 +208,18 @@ def selenium_unsubscribe(link):
             return "Unsubscribed successfully - resubscribe option found"
 
         # Find both input of type button or submit and button elements
-        buttons = driver.find_elements(By.XPATH, "//button[@type='submit'] | //input[@type='button' or @type='submit'] | //a[contains(@class, 'spectrum-Button')] | //button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'unsubscribe')]")
+        buttons_xpath = """
+        //button[@type='submit'] | 
+        //input[@type='button' or @type='submit'] | 
+        //a[contains(@class, 'spectrum-Button')] | 
+        //button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'unsubscribe')] |
+        //button[contains(@class, 'unsubscribe')] | 
+        //button[contains(@class, 'pref-center-unsubscribe-btn')] | 
+        //button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'opt out')] |
+        //button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'remove')] |
+        //button[@id='unsubscribe-all']
+        """
+        buttons = driver.find_elements(By.XPATH, buttons_xpath)
 
         # Additional keywords to look for in buttons
         additional_keywords = ['confirm', 'yes', 'agree', 'ok', 'submit']
@@ -213,8 +228,13 @@ def selenium_unsubscribe(link):
             # Check the text for <button>, value for <input>, and text for <a>
             button_text = button.text.lower() if button.tag_name in ["button", "a"] else button.get_attribute('value').lower()
             if 'unsubscribe' in button_text or any(keyword in button_text for keyword in additional_keywords):
-                button.click()
-                return "Unsubscribed"
+                try:
+                    button.click()
+                    # Add a delay or check to confirm unsubscription
+                    # ...
+                    return "Unsubscribed"
+                except Exception as e:
+                    print(f"Error clicking button: {e}")
         
         return "Unsubscribe button not found"
     except Exception as e:

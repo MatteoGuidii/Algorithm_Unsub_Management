@@ -38,6 +38,7 @@
 <body>
     <h1>Email Subscriptions</h1>
     <form method="POST" action="/" onsubmit="return confirmUnsubscribe();">
+        <button type="submit">Unsubscribe Selected</button> <!-- Button added at the top -->
         <ul>
             {% for name in subscriptions %}
             <li>
@@ -46,7 +47,7 @@
             </li>
             {% endfor %}
         </ul>
-        <button type="submit">Unsubscribe Selected</button>
+        <button type="submit">Unsubscribe Selected</button> <!-- Existing button at the bottom -->
     </form>
     <a href="/unsubscribe-history" class="history-link">View Unsubscribe History</a>
 </body>
